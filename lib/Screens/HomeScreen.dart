@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:personal_wallets_01/Screens/CreditCards.dart';
+import 'package:personal_wallets_01/Screens/InVocieScreen.dart';
 import 'package:personal_wallets_01/Screens/Income.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,8 +19,10 @@ class GelirDetay {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int gelir = 0;
+  var gelir = 0;
   List<String> gelirDetayListesi = [];
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,64 +30,97 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: Text('Kişisel Cüzdan'),
         ),
-        body: Container(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                width: double.infinity,
-                height: 380,
-                child: GridView.count(
-                  physics: NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20.0,
-                  mainAxisSpacing: 20.0,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreditCardsScreen(),
+        body: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 380,
+                    child: GridView.count(
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 20.0,
+                      mainAxisSpacing: 20.0,
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            await _animation();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreditCardsScreen(),
+                              ),
+                            );
+                          },
+                          child: _buildGridItem(
+                              Icons.credit_card, 'Kredi Kartları'),
                         ),
-                      ),
-                      child:
-                          _buildGridItem(Icons.credit_card, 'Kredi Kartları'),
-                    ),
-                    _buildGridItem(Icons.inventory, 'Faturalar'),
-                    GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => IncomesScreen(
-                              gelirDetayListesi: gelirDetayListesi),
+                        GestureDetector(
+                          onTap: () async {
+                            await _animation(); // _animation'ı çağır
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => InvoiceScreen(),
+                              ),
+                            );
+                          },
+                          child: _buildGridItem(Icons.inventory, 'Faturalar'),
                         ),
-                      ),
-                      child: _buildGridItem(Icons.money, 'Gelirlerim'),
+                        GestureDetector(
+                          onTap: () async {
+                            await _animation();
+                            // ignore: use_build_context_synchronously
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => IncomesScreen(
+                                    gelirDetayListesi: gelirDetayListesi),
+                              ),
+                            );
+                          },
+                          child: _buildGridItem(Icons.money, 'Gelirlerim'),
+                        ),
+                        _buildGridItem(
+                            Icons.account_balance_wallet, 'Giderlerim'),
+                      ],
                     ),
-                    _buildGridItem(Icons.account_balance_wallet, 'Giderlerim'),
-                  ],
-                ),
+                  ),
+                  _buildDivider(),
+                  SizedBox(height: 20),
+                  _buildBalanceRow(
+                    "Toplam Bakiye:",
+                    "${gelirDetayListesi.isNotEmpty ? gelirDetayListesi.map((e) => int.parse(e)).reduce((value, element) => value + element).toString() : "0.00"} ₺",
+                  ),
+                  SizedBox(height: 20),
+                  _buildBalanceRow("Toplam Gider:", "0.00 ₺"),
+                  SizedBox(height: 20),
+                  _buildBalanceRow("Toplam Gelir:", "0.00 ₺"),
+                  SizedBox(height: 20),
+                  _buildDivider(),
+                  SizedBox(height: 20),
+                ],
               ),
-              _buildDivider(),
-              SizedBox(height: 20),
-              _buildBalanceRow(
-                "Toplam Bakiye:",
-                "${gelirDetayListesi.isNotEmpty ? gelirDetayListesi.map((e) => int.parse(e)).reduce((value, element) => value + element).toString() : "0.00"} ₺",
-              ),
-              SizedBox(height: 20),
-              _buildBalanceRow("Toplam Gider:", "0.00 ₺"),
-              SizedBox(height: 20),
-              _buildBalanceRow("Toplam Gelir:", "0.00 ₺"),
-              SizedBox(height: 20),
-              _buildDivider(),
-              SizedBox(height: 20),
-            ],
-          ),
+            ),
+            isLoading
+                ? Align(
+                    alignment: Alignment.center,
+                    child: Lottie.asset(
+                      'assets/animations/animation.json',
+                      width: 100,
+                      height: 100,
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ],
         ),
         floatingActionButton: Container(
-          width: 80,
-          height: 80,
+          width: 60,
+          height: 60,
           decoration: BoxDecoration(
             color: Color.fromARGB(255, 68, 6, 201),
             borderRadius: BorderRadius.circular(10),
@@ -196,6 +233,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
       // Yeni gelir detayını listeye ekleyin
       gelirDetayListesi.add(yeniGelirDetay.miktar);
+      _animation();
+    });
+  }
+
+  Future<void> _animation() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    await Future.delayed(const Duration(milliseconds: 300), () {
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 }

@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  lottie: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -20,3 +21,4 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/animations/
