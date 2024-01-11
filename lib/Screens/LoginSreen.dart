@@ -67,7 +67,7 @@ class LoginScreen extends StatelessWidget {
                 color: Colors.white,
               ),
               style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 68, 6, 201),
+                primary: Colors.blue[900],
                 padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                 textStyle: TextStyle(
                   fontSize: 20,

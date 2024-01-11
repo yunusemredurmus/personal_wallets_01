@@ -7,13 +7,28 @@ class CreditCardsScreen extends StatefulWidget {
   State<CreditCardsScreen> createState() => _CreditCardsScreenState();
 }
 
-class _CreditCardsScreenState extends State<CreditCardsScreen> {
-  List<Map<String, dynamic>> creditCards = [
-    {"id": 1, "name": "Kredi Kartı 1", "kartnumarası": "00000000000"},
-    {"id": 2, "name": "Kredi Kartı 2", "kartnumarası": "0000000000"},
-    {"id": 3, "name": "Kredi Kartı 3", "kartnumarası": "0000000000000"}
-  ];
+List<Map<String, dynamic>> creditCards = [
+  {
+    "id": 1,
+    "name": "Kredi Kartı 1",
+    "kartnumarası": "00000000000",
+    "color": Colors.red,
+  },
+  {
+    "id": 2,
+    "name": "Kredi Kartı 2",
+    "kartnumarası": "0000000000",
+    "color": Colors.blue,
+  },
+  {
+    "id": 3,
+    "name": "Kredi Kartı 3",
+    "kartnumarası": "0000000000000",
+    "color": Colors.green,
+  }
+];
 
+class _CreditCardsScreenState extends State<CreditCardsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +46,7 @@ class _CreditCardsScreenState extends State<CreditCardsScreen> {
                   return CreditCardItem(
                     cardName: creditCards[index]["name"],
                     cardNumber: creditCards[index]["kartnumarası"],
+                    color: creditCards[index]["color"],
                   );
                 },
               ),
@@ -58,21 +74,22 @@ class _CreditCardsScreenState extends State<CreditCardsScreen> {
 class CreditCardItem extends StatelessWidget {
   final String cardName;
   final String cardNumber;
+  final Color color;
 
   const CreditCardItem({
     required this.cardName,
     required this.cardNumber,
+    required this.color,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Display only the last 4 digits of the card number
     String lastFourDigits = cardNumber.substring(cardNumber.length - 4);
     String maskedNumber = '**** **** **** ' + lastFourDigits;
 
     return Card(
-      color: Color.fromARGB(255, 68, 6, 201),
+      color: color,
       elevation: 5,
       child: ListTile(
         title: Text(

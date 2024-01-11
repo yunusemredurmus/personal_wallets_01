@@ -15,100 +15,100 @@ class SignIn extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        title: Text('Giriş Yap'),
+        title: Text(
+          'Logo',
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Icon(
-              Icons.account_circle,
-              size: 100,
-              color: Color.fromARGB(255, 68, 6, 201),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Kullanıcı Adı',
-                border: OutlineInputBorder(),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 40,
               ),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Şifre',
-                border: OutlineInputBorder(),
+              Text(
+                "Logo",
+                style: TextStyle(fontSize: 30, color: Colors.blue[900]),
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  Color.fromARGB(255, 68, 6, 201),
+              SizedBox(height: 30),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Kullanıcı Adı',
+                  border: OutlineInputBorder(),
                 ),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomeScreen(),
+              SizedBox(height: 10),
+              TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Şifre',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    Colors.blue[900],
                   ),
-                );
-              },
-              child: Text(
-                'Giriş Yap',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'Giriş Yap',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 10),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Google ile Giriş Yap'),
-                SizedBox(width: 10),
-                Icon(
-                  Icons.g_mobiledata_sharp,
-                  size: 40,
-                ),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Kayıt Ol',
-                  style: TextStyle(
+              SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Kayıt Ol',
+                    style: TextStyle(color: Colors.blue[800], fontSize: 20),
+                  ),
+                  SizedBox(width: 10),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Şifremi Unuttum',
+                    style: TextStyle(
                       color: Colors.blue[800],
-                      decoration: TextDecoration.underline),
-                ),
-                SizedBox(width: 10),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Şifremi Unuttum',
-                  style: TextStyle(
-                      color:                   Color.fromARGB(255, 68, 6, 201),
-
-                      decoration: TextDecoration.underline),
-                ),
-              ],
-            ),
-            Image(
-              image: AssetImage('assets/images/asap.png'),
-              width: 300,
-              height: 250,
-            ),
-          ],
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.facebook, size: 50, color: Colors.blue[900]),
+                  SizedBox(width: 10),
+                  Icon(Icons.calendar_view_week_sharp,
+                      size: 50, color: Colors.red),
+                ],
+              )
+              // Image(
+              //   image: AssetImage('assets/images/asap.png'),
+              //   width: 300,
+              //   height: 250,
+              // ),
+            ],
+          ),
         ),
       ),
     );

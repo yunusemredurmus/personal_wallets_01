@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:personal_wallets_01/Screens/HomeScreen.dart';
 
@@ -38,7 +40,8 @@ class _IncomesScreenState extends State<IncomesScreen> {
 
   Widget _buildListItem(int index) {
     return Card(
-      color: Color.fromARGB(255, 68, 6, 201),
+      color: Color.fromARGB(255, Random().nextInt(255), Random().nextInt(255),
+          Random().nextInt(255)),
       elevation: 3,
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ListTile(

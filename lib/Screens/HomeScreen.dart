@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:intl/intl.dart';
 import 'package:personal_wallets_01/Screens/CreditCards.dart';
 import 'package:personal_wallets_01/Screens/InVocieScreen.dart';
 import 'package:personal_wallets_01/Screens/Income.dart';
@@ -12,24 +15,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class GelirDetay {
-  String miktar;
+  int miktar;
   String gelirTarihi;
+  Color color;
 
-  GelirDetay(this.miktar, this.gelirTarihi);
+  GelirDetay(this.miktar, this.gelirTarihi, this.color);
 }
 
 class GiderDetay {
-  String miktar;
+  int miktar;
   String giderTarihi;
+  Color color;
 
-  GiderDetay(this.miktar, this.giderTarihi);
+  GiderDetay(this.miktar, this.giderTarihi, this.color);
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var gelir = 0;
-  List<String> gelirDetayListesi = [];
-  List<String> giderDetayListesi = [];
-
+  int gelir = 0;
+  int gider = 0;
+  List<GelirDetay> gelirDetayListesi = [];
+  List<GiderDetay> giderDetayListesi = [];
   bool isLoading = false;
 
   @override
@@ -64,8 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         },
-                        child: _buildGridItem(
-                            Icons.credit_card, 'Kredi Kartları', Colors.red),
+                        child: _buildGridItem(Icons.credit_card,
+                            'Kredi Kartları', Color.fromARGB(255, 8, 18, 213)),
                       ),
                       GestureDetector(
                         onTap: () async {
@@ -87,7 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => IncomesScreen(
-                                gelirDetayListesi: gelirDetayListesi,
+                                gelirDetayListesi: gelirDetayListesi
+                                    .map((e) => e.miktar.toString())
+                                    .toList(),
                               ),
                             ),
                           );
@@ -103,13 +110,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 _buildDivider(),
                 SizedBox(height: 20),
                 _buildBalanceRow(
-                  "Toplam Bakiye:",
-                  "${gelirDetayListesi.isNotEmpty ? gelirDetayListesi.map((e) => int.parse(e)).reduce((value, element) => value + element).toString() : "0.00"} ₺",
+                  "Toplam Gelen:",
+                  "${gelirDetayListesi.isNotEmpty ? _formatCurrency(gelirDetayListesi.map((e) => e.miktar).reduce((value, element) => value + element)) : "0.00"}",
                 ),
                 SizedBox(height: 20),
-                _buildBalanceRow("Toplam Gider:", "0.00 ₺"),
+                _buildBalanceRow("Toplam Gider:",
+                    "${giderDetayListesi.isNotEmpty ? _formatCurrency(giderDetayListesi.map((e) => e.miktar).reduce((value, element) => value + element)) : "0.00"}"),
                 SizedBox(height: 20),
-                _buildBalanceRow("Toplam Gelir:", "0.00 ₺"),
+                _buildBalanceRow("Toplam Bakiye:",
+                    "${_formatCurrency((gelirDetayListesi.isNotEmpty ? gelirDetayListesi.map((e) => e.miktar).reduce((value, element) => value + element) : 0) - (giderDetayListesi.isNotEmpty ? giderDetayListesi.map((e) => e.miktar).reduce((value, element) => value + element) : 0))}"),
                 SizedBox(height: 20),
               ],
             ),
@@ -137,11 +146,11 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 55,
             margin: EdgeInsets.only(right: 100),
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 68, 6, 201),
               borderRadius: BorderRadius.circular(10),
             ),
             child: FloatingActionButton(
-              backgroundColor: Color.fromARGB(255, 68, 6, 201),
+              heroTag: "btn1",
+              backgroundColor: Colors.blue[900],
               onPressed: () => _gelirEkleDialog(context),
               child: Container(
                 child: Column(
@@ -150,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icon(Icons.add, size: 30, color: Colors.white),
                     Text(
                       "Gelir",
-                      style: TextStyle(fontSize: 10, color: Colors.white),
+                      style: TextStyle(fontSize: 15, color: Colors.white),
                     ),
                   ],
                 ),
@@ -161,20 +170,20 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 70,
             height: 55,
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 68, 6, 201),
               borderRadius: BorderRadius.circular(10),
             ),
             child: FloatingActionButton(
-              backgroundColor: Color.fromARGB(255, 68, 6, 201),
-              onPressed: () => _gelirEkleDialog(context),
+              heroTag: "btn2",
+              backgroundColor: Colors.orange,
+              onPressed: () => _giderEkleDialog(context),
               child: Container(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.add, size: 30, color: Colors.white),
+                    Icon(Icons.remove, size: 30, color: Colors.white),
                     Text(
-                      "Gelir",
-                      style: TextStyle(fontSize: 10, color: Colors.white),
+                      "Gider",
+                      style: TextStyle(fontSize: 15, color: Colors.white),
                     ),
                   ],
                 ),
@@ -270,11 +279,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _gelirEkle() {
     setState(() {
-      GelirDetay yeniGelirDetay =
-          GelirDetay(gelir.toString(), DateTime.now().toString());
+      Color randomColor = Color.fromARGB(255, Random().nextInt(256),
+          Random().nextInt(256), Random().nextInt(256));
 
-      // Yeni gelir detayını listeye ekleyin
-      gelirDetayListesi.add(yeniGelirDetay.miktar);
+      GelirDetay yeniGelirDetay =
+          GelirDetay(gelir, DateTime.now().toString(), randomColor);
+
+      gelirDetayListesi.add(yeniGelirDetay);
       _animation();
     });
   }
@@ -294,10 +305,50 @@ class _HomeScreenState extends State<HomeScreen> {
   void _giderEkle() {
     setState(() {
       GiderDetay yeniGiderDetay =
-          GiderDetay(gelir.toString(), DateTime.now().toString());
+          GiderDetay(gider, DateTime.now().toString(), Colors.orange);
 
-      // Yeni gider detayını listeye ekleme
-      giderDetayListesi.add(yeniGiderDetay.miktar);
+      giderDetayListesi.add(yeniGiderDetay);
+      _animation();
     });
+  }
+
+  void _giderEkleDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Gider Ekle"),
+          content: TextField(
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              setState(() {
+                gider = int.parse(value);
+              });
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("İptal"),
+            ),
+            TextButton(
+              onPressed: () {
+                _giderEkle();
+                Navigator.of(context).pop();
+              },
+              child: Text("Ekle"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // miktar güncelleme
+  String _formatCurrency(int amount) {
+    return NumberFormat.currency(locale: 'tr_TR', symbol: '₺')
+        .format(amount.toDouble());
   }
 }

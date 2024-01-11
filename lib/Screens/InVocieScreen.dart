@@ -14,28 +14,32 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       "name": "Elektrik",
       "Tutar": 100,
       "tarih": "12.12.2021",
-      "icon": Icons.electric_bolt_sharp
+      "icon": Icons.electric_bolt_sharp,
+      "color": Colors.red,
     },
     {
       "id": 2,
       "name": "Su",
       "Tutar": 100,
       "tarih": "12.12.2021",
-      "icon": Icons.water
+      "icon": Icons.water,
+      "color": Colors.blue,
     },
     {
       "id": 3,
       "name": "Telefon",
       "Tutar": 100,
       "tarih": "12.12.2021",
-      "icon": Icons.phone
+      "icon": Icons.phone,
+      "color": Colors.green,
     },
     {
       "id": 4,
       "name": "Doğalgaz",
       "Tutar": 100,
       "tarih": "12.12.2021",
-      "icon": Icons.fireplace
+      "icon": Icons.fireplace,
+      "color": Colors.pink,
     },
   ];
 
@@ -53,7 +57,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
           itemCount: faturaDetayListesi.length,
           itemBuilder: (context, index) {
             return Card(
-              color: Color.fromARGB(255, 68, 6, 201),
+              color: faturaDetayListesi[index]["color"],
               elevation: 3,
               margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: ListTile(
@@ -90,7 +94,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
           borderRadius: BorderRadius.circular(10),
         ),
         child: FloatingActionButton(
-          backgroundColor: Color.fromARGB(255, 68, 6, 201),
+          backgroundColor: Colors.blue[900],
           onPressed: () {
             _showDialog();
           },
